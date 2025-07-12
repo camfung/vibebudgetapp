@@ -176,6 +176,23 @@ allWidgets.push({
   render: coffeeCounterCard
 });
 
+// Move this function above renderApp
+function renderWidgetConfigForm(selectedWidgets, allWidgets) {
+  return `
+    <div class="mt-6">
+      <label class="block text-sm font-medium text-slate-300 mb-2">Dashboard Widgets</label>
+      <form id="widget-config-form" class="space-y-2">
+        ${allWidgets.map(w => `
+          <div class="flex items-center">
+            <input type="checkbox" id="widget-checkbox-${w.id}" name="widgets" value="${w.id}" ${selectedWidgets.includes(w.id) ? 'checked' : ''} class="mr-2">
+            <label for="widget-checkbox-${w.id}" class="text-slate-300">${w.label}</label>
+          </div>
+        `).join('')}
+      </form>
+    </div>
+  `;
+}
+
 // --- MAIN APP RENDER ---
 function renderApp() {
   const selectedWidgets = storageService.getWidgetConfig();
@@ -218,7 +235,7 @@ function renderApp() {
       </ul>`
   });
 
-  // Settings Modal
+  // Settings Modal (add widget config form)
   const settingsModal = modal({
     id: 'settings-modal',
     title: 'Settings',
@@ -229,7 +246,9 @@ function renderApp() {
       <div class="grid grid-cols-2 gap-4">
         <div><label for="start-time-input" class="block text-sm font-medium text-slate-300 mb-2">Workday Start</label><input type="time" id="start-time-input" class="w-full bg-slate-900 border border-slate-600 rounded-md p-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"></div>
         <div><label for="end-time-input" class="block text-sm font-medium text-slate-300 mb-2">Workday End</label><input type="time" id="end-time-input" class="w-full bg-slate-900 border border-slate-600 rounded-md p-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"></div>
-      </div>`,
+      </div>
+      ${renderWidgetConfigForm(selectedWidgets, allWidgets)}
+    `,
     footer: `<div class="flex justify-end p-4 bg-slate-800/50 border-t border-slate-700 rounded-b-xl"><button id="save-settings-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md transition-colors">Save Changes</button></div>`
   });
 
@@ -274,7 +293,6 @@ function renderApp() {
   return `
     <div class="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-6 md:p-10 shadow-2xl">
       ${header}
-      <button id="open-widget-config-btn" class="mb-4 bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold py-2 px-4 rounded-md">Configure Widgets</button>
       ${statsGrid}
     </div>
     ${detailsModal}
@@ -282,7 +300,6 @@ function renderApp() {
     ${transactionModal}
     ${historyModal}
     ${confirmModal}
-    ${widgetConfigModal({ selectedWidgets, allWidgets })}
     ${coffeeHistoryModal()}
   `;
 }
@@ -338,10 +355,6 @@ function getDOMElements() {
       workHours: document.getElementById('details-work-hours'),
       hourlyRate: document.getElementById('details-hourly-rate'),
     },
-    openWidgetConfigBtn: document.getElementById('open-widget-config-btn'),
-    widgetConfigModal: document.getElementById('widget-config-modal'),
-    closeWidgetConfigModalBtn: document.getElementById('close-widget-config-modal-btn'),
-    saveWidgetConfigBtn: document.getElementById('save-widget-config-btn'),
     widgetConfigForm: document.getElementById('widget-config-form'),
     logCoffeeBtn: document.getElementById('log-coffee-btn'),
     viewCoffeeHistoryBtn: document.getElementById('view-coffee-history-btn'),
@@ -678,9 +691,15 @@ document.addEventListener('DOMContentLoaded', () => {
       config.startDate = DOMElements.startDateInput.value;
       config.startTime = DOMElements.startTimeInput.value;
       config.endTime = DOMElements.endTimeInput.value;
+      // Save widget config
+      const checked = Array.from(document.querySelectorAll('#widget-config-form input[name="widgets"]:checked')).map(cb => cb.value);
+      storageService.saveWidgetConfig(checked);
       saveSettings();
-      updateAllDisplays();
-      initializeDatePickers();
+      // Re-render app to apply widget config changes
+      document.getElementById('app-root').innerHTML = renderApp();
+      DOMElements = getDOMElements();
+      setupEventListeners();
+      // Hide modal after re-render
       DOMElements.settingsModal.classList.add('hidden');
     });
 
@@ -739,22 +758,6 @@ document.addEventListener('DOMContentLoaded', () => {
           DOMElements.transactionNewCategoryInput.value = '';
         }
       }
-    });
-
-    if (DOMElements.openWidgetConfigBtn) DOMElements.openWidgetConfigBtn.addEventListener('click', () => {
-      DOMElements.widgetConfigModal.classList.remove('hidden');
-    });
-    if (DOMElements.closeWidgetConfigModalBtn) DOMElements.closeWidgetConfigModalBtn.addEventListener('click', () => {
-      DOMElements.widgetConfigModal.classList.add('hidden');
-    });
-    if (DOMElements.saveWidgetConfigBtn) DOMElements.saveWidgetConfigBtn.addEventListener('click', () => {
-      const checked = Array.from(DOMElements.widgetConfigForm.querySelectorAll('input[name="widgets"]:checked')).map(cb => cb.value);
-      storageService.saveWidgetConfig(checked);
-      // Re-render app to apply changes
-      document.getElementById('app-root').innerHTML = renderApp();
-      // Re-initialize DOMElements and event listeners
-      DOMElements = getDOMElements();
-      setupEventListeners();
     });
 
     if (DOMElements.logCoffeeBtn) DOMElements.logCoffeeBtn.addEventListener('click', () => {
