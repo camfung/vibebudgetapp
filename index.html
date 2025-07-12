@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Pay Calculator Pro</title>
+	<!-- Tailwind CSS for styling -->
+	<script src="https://cdn.tailwindcss.com"></script>
+	<!-- Flatpickr for date picking -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+	<!-- Custom Google Font -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+		rel="stylesheet">
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="text-slate-100 flex items-center justify-center min-h-screen p-4">
+	<div id="app-root" class="w-full max-w-7xl mx-auto"></div>
+
+	<!-- Add/Edit Transaction Modal -->
+	<div id="transaction-modal"
+		class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+		<div class="bg-slate-800 border border-slate-700 rounded-xl shadow-2xl w-full max-w-md">
+			<div class="flex justify-between items-center p-4 border-b border-slate-700">
+				<h2 id="transaction-modal-title" class="text-lg font-semibold">Add Transaction</h2>
+				<button id="close-transaction-modal-btn"
+					class="text-slate-400 hover:text-white text-2xl">&times;</button>
+			</div>
+			<form id="transaction-form" class="p-6 space-y-6">
+				<input type="hidden" id="transaction-id-input">
+				<div><label for="transaction-title-input"
+						class="block text-sm font-medium text-slate-300 mb-2">Title</label><input
+						type="text" id="transaction-title-input"
+						class="w-full bg-slate-900 border border-slate-600 rounded-md p-2 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none"
+						placeholder="e.g., Coffee" required></div>
+				<div><label for="transaction-amount-input"
+						class="block text-sm font-medium text-slate-300 mb-2">Amount
+						($)</label><input type="number" id="transaction-amount-input"
+						class="w-full bg-slate-900 border border-slate-600 rounded-md p-2 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none"
+						placeholder="e.g., 4.50" required step="0.01"></div>
+			</form>
+			<div class="flex justify-end p-4 bg-slate-800/50 border-t border-slate-700 rounded-b-xl"><button
+					id="save-transaction-btn" form="transaction-form" type="submit"
+					class="bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2 px-4 rounded-md transition-colors">Save
+					Transaction</button></div>
+		</div>
+	</div>
+
+	<!-- Transaction History Modal -->
+	<div id="history-modal"
+		class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+		<di	class="bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2 px-6 rounded-md transition-colors">Delete</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- External Libs -->
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+	<!-- Main Application Script -->
+	<script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budgeting - Pay Calculator Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="text-slate-100 flex items-center justify-center min-h-screen p-4">
+  <div class="w-full max-w-4xl mx-auto bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-6 md:p-10 shadow-2xl">
+    <header class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <h1 class="text-3xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 text-transparent bg-clip-text">Budgeting</h1>
+        <p class="text-slate-400 mt-1">Analyze and control your spending by category and date.</p>
+      </div>
+      <a href="index.html" class="text-indigo-400 hover:underline">← Back to Dashboard</a>
+    </header>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-2">Date Range</label>
+        <div class="flex gap-2">
+          <input type="text" id="budget-start-date" class="bg-slate-900 border border-slate-600 rounded-md p-2 w-full" placeholder="Start date">
+          <input type="text" id="budget-end-date" class="bg-slate-900 border border-slate-600 rounded-md p-2 w-full" placeholder="End date">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-2">Category</label>
+        <select id="budget-category-select" class="bg-slate-900 border border-slate-600 rounded-md p-2 w-full">
+          <option value="">All Categories</option>
+        </select>
+        <input type="text" id="budget-new-category" class="mt-2 bg-slate-900 border border-slate-600 rounded-md p-2 w-full" placeholder="Add new category (press Enter)">
+      </div>
+    </div>
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-4">Summary</h2>
+      <div id="budget-summary" class="bg-slate-900/70 p-4 rounded-lg border border-slate-700 text-slate-200">
+        <!-- Summary will be rendered here -->
+      </div>
+    </section>
+    <section>
+      <h2 class="text-xl font-semibold mb-4">Transactions</h2>
+      <div id="budget-grouped-list" class="bg-slate-900/70 p-4 rounded-lg border border-slate-700">
+        <!-- Grouped transactions will be rendered here -->
+      </div>
+    </section>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="budgeting.js"></script>
+</body>
+</html> 
